@@ -1,0 +1,12 @@
+syntax = "proto3";
+package concurrentchain.concurrentchain;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/totegamma/concurrent-chain/x/concurrentchain/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

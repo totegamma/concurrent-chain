@@ -1,0 +1,7 @@
+syntax = "proto3";
+package concurrentchain.concurrentchain;
+
+option go_package = "github.com/totegamma/concurrent-chain/x/concurrentchain/types";
+
+// Msg defines the Msg service.
+service Msg {}

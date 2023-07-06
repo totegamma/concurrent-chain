@@ -1,0 +1,12 @@
+syntax = "proto3";
+package concurrentchain.concurrentchain;
+
+import "gogoproto/gogo.proto";
+import "concurrentchain/concurrentchain/params.proto";
+
+option go_package = "github.com/totegamma/concurrent-chain/x/concurrentchain/types";
+
+// GenesisState defines the concurrentchain module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
