@@ -23,7 +23,19 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgCreateAddressbook = "op_weight_msg_addressbook"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateAddressbook int = 100
+
+	opWeightMsgUpdateAddressbook = "op_weight_msg_addressbook"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateAddressbook int = 100
+
+	opWeightMsgDeleteAddressbook = "op_weight_msg_addressbook"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteAddressbook int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module.
@@ -34,6 +46,16 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	concurrentchainGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		AddressbookList: []types.Addressbook{
+			{
+				Creator: sample.AccAddress(),
+				Index:   "0",
+			},
+			{
+				Creator: sample.AccAddress(),
+				Index:   "1",
+			},
+		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&concurrentchainGenesis)
@@ -51,6 +73,39 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
+	var weightMsgCreateAddressbook int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateAddressbook, &weightMsgCreateAddressbook, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateAddressbook = defaultWeightMsgCreateAddressbook
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateAddressbook,
+		concurrentchainsimulation.SimulateMsgCreateAddressbook(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateAddressbook int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateAddressbook, &weightMsgUpdateAddressbook, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateAddressbook = defaultWeightMsgUpdateAddressbook
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateAddressbook,
+		concurrentchainsimulation.SimulateMsgUpdateAddressbook(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteAddressbook int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteAddressbook, &weightMsgDeleteAddressbook, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteAddressbook = defaultWeightMsgDeleteAddressbook
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteAddressbook,
+		concurrentchainsimulation.SimulateMsgDeleteAddressbook(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
 	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
@@ -59,6 +114,30 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 // ProposalMsgs returns msgs used for governance proposals for simulations.
 func (am AppModule) ProposalMsgs(simState module.SimulationState) []simtypes.WeightedProposalMsg {
 	return []simtypes.WeightedProposalMsg{
+		simulation.NewWeightedProposalMsg(
+			opWeightMsgCreateAddressbook,
+			defaultWeightMsgCreateAddressbook,
+			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
+				concurrentchainsimulation.SimulateMsgCreateAddressbook(am.accountKeeper, am.bankKeeper, am.keeper)
+				return nil
+			},
+		),
+		simulation.NewWeightedProposalMsg(
+			opWeightMsgUpdateAddressbook,
+			defaultWeightMsgUpdateAddressbook,
+			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
+				concurrentchainsimulation.SimulateMsgUpdateAddressbook(am.accountKeeper, am.bankKeeper, am.keeper)
+				return nil
+			},
+		),
+		simulation.NewWeightedProposalMsg(
+			opWeightMsgDeleteAddressbook,
+			defaultWeightMsgDeleteAddressbook,
+			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
+				concurrentchainsimulation.SimulateMsgDeleteAddressbook(am.accountKeeper, am.bankKeeper, am.keeper)
+				return nil
+			},
+		),
 		// this line is used by starport scaffolding # simapp/module/OpMsg
 	}
 }

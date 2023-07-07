@@ -1,7 +1,37 @@
 syntax = "proto3";
+
 package concurrentchain.concurrentchain;
+
+import "concurrentchain/concurrentchain/addressbook.proto";
 
 option go_package = "github.com/totegamma/concurrent-chain/x/concurrentchain/types";
 
 // Msg defines the Msg service.
-service Msg {}
+service Msg {
+  rpc CreateAddressbook (MsgCreateAddressbook) returns (MsgCreateAddressbookResponse);
+  rpc UpdateAddressbook (MsgUpdateAddressbook) returns (MsgUpdateAddressbookResponse);
+  rpc DeleteAddressbook (MsgDeleteAddressbook) returns (MsgDeleteAddressbookResponse);
+}
+message MsgCreateAddressbook {
+  string creator = 1;
+  string index   = 2;
+  string fqdn    = 3;
+}
+
+message MsgCreateAddressbookResponse {}
+
+message MsgUpdateAddressbook {
+  string creator = 1;
+  string index   = 2;
+  string fqdn    = 3;
+}
+
+message MsgUpdateAddressbookResponse {}
+
+message MsgDeleteAddressbook {
+  string creator = 1;
+  string index   = 2;
+}
+
+message MsgDeleteAddressbookResponse {}
+

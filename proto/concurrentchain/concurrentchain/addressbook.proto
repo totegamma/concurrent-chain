@@ -1,0 +1,11 @@
+syntax = "proto3";
+package concurrentchain.concurrentchain;
+
+option go_package = "github.com/totegamma/concurrent-chain/x/concurrentchain/types";
+
+message Addressbook {
+  string index = 1; 
+  string fqdn = 2; 
+  string creator = 3;
+}
+
